@@ -4,6 +4,7 @@
 #define __main__
 #include "bsort_gen.c"
 #define N_STR 4
+#define
 
 char *strs[4] = {
 	"banana",

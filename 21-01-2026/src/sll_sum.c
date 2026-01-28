@@ -14,5 +14,5 @@ int main() {
 		sum += temp -> data;
 		temp = temp -> next;
 	}
-	printf("Sum of Nodes: %d\n", sum);
+	printf("Number of Nodes: %d\n", count);
 }

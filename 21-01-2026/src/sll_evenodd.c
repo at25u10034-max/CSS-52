@@ -13,9 +13,9 @@ int main() {
 	temp = HEAD;
 	while (temp) {
 		if (temp -> data % 2)
-			odd++;
-		else 
 			even++;
+		else 
+			odd++;
 		temp = temp -> next;
 	}
 	printf("Even: %d nos.\nOdd: %d nos.\n", even, odd);
