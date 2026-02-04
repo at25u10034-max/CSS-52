@@ -164,20 +164,15 @@ void printsubarr(int* arr, int low, int high, _Bool newl) {
 }
 
 
-void merge(int *arr, int *part_l, int *part_r, int low, int high, int lsize, int rsize) {
-	printarr(lsize, part_l, 0);
-	printarr(rsize, part_r, 1);
-	printf("Called: MERGE l: %d, h:%d, ls:%d, rs:%d\n", low, high, lsize, rsize);
-
-	
+void merge(int *arr, int *part_l, int *part_r, int size, int lsize, int rsize) {
 	int l = 0, r = 0;
-	for (int i = low; i <= high; i++) {
+	for (int i = 0; i < size; i++) {
 		if (l == lsize)
-			for (; i <= high; i++) 
+			for (; i < size; i++) 
 				arr[i] = part_r[r++];
 
 		if (r == rsize)
-			for (; i <= high; i++) 
+			for (; i < size; i++) 
 				arr[i] = part_l[l++];
 
 		if (part_l[l] < part_r[r])
@@ -186,56 +181,45 @@ void merge(int *arr, int *part_l, int *part_r, int low, int high, int lsize, int
 			arr[i] = part_r[r++];
 	}
 
-	printf("After Merge:");
-	printsubarr(arr, low, high, 1);
-
-	
 }
 
-void split(int *arr, int low, int high) {
-	printf("Called: SPLIT l: %d, h:%d\n", low, high);
-	if (low >= high) return;
-	printf("ARRAY IS: ");
-	printarr(sizeof(arr) / sizeof(int), arr, 1);
+void split(int *arr, int n) {
+	if (n <= 1) return;
 	int *part_l, *part_r;
-	int n = high - low + 1;
-	printarr(n, arr, 1);
+	
+	
 	if (n % 2 == 0) {
 		part_l = malloc(sizeof(int) * n / 2);
 		part_r = malloc(sizeof(int) * n / 2);
-		printf("%d\n", n);
 		for (int i = 0; i < n/2; i++) {
-			part_l[i] = arr[i + low];
-			part_r[i] = arr[n/2 + i + low];
+			part_l[i] = arr[i];
+			part_r[i] = arr[n/2 + i];
 		}
 
-		printf("Parts ARE:");
-		printarr(n/2, part_l, 0);
-		printarr(n/2, part_r, 1);
-		split(part_l, low, n/2 - 1 + low);
-		split(part_r, n/2 + low, high);
-		merge(arr, part_l, part_r, low, high, n/2, n/2);
+		split(part_l, n/2);
+		split(part_r, n/2);
+		merge(arr, part_l, part_r, n, n/2, n/2);
 		
 	} else {
 		part_l = malloc(sizeof(int) * (n + 1) / 2);
 		part_r = malloc(sizeof(int) * (n - 1) / 2);
 
 		for (int i = 0; i < n/2; i++) {
-			part_l[i] = arr[i + low];
-			part_r[i] = arr[n/2 + 1 + i + low];
+			part_l[i] = arr[i];
+			part_r[i] = arr[n/2 + 1 + i];
 		}
-		part_l[n/2] = arr[low + n/2];	
+		part_l[n/2] = arr[n/2];	
 
-		split(part_l, low, n/2 + low);
-		split(part_r, n/2 + low + 1, high);
-		merge(arr, part_l, part_r, low, high, (n + 1)/2, (n - 1)/2);
+		split(part_l, (n + 1)/2);
+		split(part_r, (n - 1)/2);
+		merge(arr, part_l, part_r,  n, (n + 1)/2, (n - 1)/2);
 
 	}
 
 }
 
 void mergesort(int *arr, int n) {
-	split(arr, 0, n-1);
+	split(arr, n);
 	printf("Finally: ");
 	printarr(n, arr, 1);
 }
