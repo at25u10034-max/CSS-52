@@ -133,7 +133,6 @@ void quicksort(int *arr, int n) {
 
 
 void printarr(int size, int* arr, _Bool newl) {
-
 	if (size == 0) {
 		printf("[< empty >]");
 		return;
@@ -148,20 +147,6 @@ void printarr(int size, int* arr, _Bool newl) {
 	if (newl) puts("");
 }
 
-void printsubarr(int* arr, int low, int high, _Bool newl) {
-
-	if (low > high) {
-		printf("[< empty >]");
-		return;
-	}
-		
-	printf("[");
-	for (int i = low; i < high; i++) {
-		printf("%d, ", arr[i]);
-	}
-	printf("%d]", arr[high]);
-	if (newl) puts("");
-}
 
 
 void merge(int *arr, int *part_l, int *part_r, int size, int lsize, int rsize) {
@@ -182,6 +167,9 @@ void merge(int *arr, int *part_l, int *part_r, int size, int lsize, int rsize) {
 	}
 
 }
+
+
+
 
 void split(int *arr, int n) {
 	if (n <= 1) return;
