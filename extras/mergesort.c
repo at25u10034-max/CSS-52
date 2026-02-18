@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <string.h>
 
 /* ---------- ANSI COLORS ---------- */
 #define GREEN  "\033[1;32m"
@@ -213,9 +214,100 @@ void mergesort(int *arr, int n) {
 }
 
 
+void countsort(char *arr) {
+	int n = strlen(arr);
+	int counter[256] = {0};
+	for (int i = 0; i < n; i++) counter[arr[i]]++;
+
+	for(int i = 0, j = 0; i < n && j < 256; j++)
+		while (counter[j]--)
+			arr[i++] = j;
+} 
+
+
+void countsort_ps(char *arr) {
+	int n = strlen(arr);
+	int counter[256] = {0};
+	char temp[n+1];
+	for (int i = 0; i < n; i++) counter[arr[i]]++;
+	for (int i = 1; i < 256; i++) counter[i] += counter [i-1];
+		for(int i = n-1; i >=0; i--)
+		temp[--counter[arr[i]]] = arr[i];
+
+	temp[n] = 0;
+	memcpy(arr, temp, n);
+} 
+
+#include <assert.h>
+
+// Define the function pointer type
+typedef void (*CountSortFunc)(char*);
+
+// A simple test runner function
+void run_test(CountSortFunc sort_fn, const char* test_name, const char* input, const char* expected) {
+    // Create a mutable copy of the input string
+    char buffer[256];
+    strcpy(buffer, input);
+
+    // Execute the sorting function via pointer
+    sort_fn(buffer);
+
+    // Check results
+    if (strcmp(buffer, expected) == 0) {
+        printf("[PASS] %-20s | Input: \"%s\" -> Output: \"%s\"\n", test_name, input, buffer);
+    } else {
+        printf("[FAIL] %-20s | Expected: \"%s\", but got: \"%s\"\n", test_name, expected, buffer);
+    }
+}
+
+// The main tester that takes your functional pointer
+void test_counting_sort(CountSortFunc sort_fn) {
+    printf("--- Starting Counting Sort Test Suite ---\n");
+
+    // Case 1: Standard lowercase
+    run_test(sort_fn, "Standard Lowercase", "banana", "aaabnn");
+
+    // Case 2: Already sorted
+    run_test(sort_fn, "Already Sorted", "abcde", "abcde");
+
+    // Case 3: Reverse sorted
+    run_test(sort_fn, "Reverse Sorted", "edcba", "abcde");
+
+    // Case 4: Duplicate characters
+    run_test(sort_fn, "Duplicates", "mississippi", "iiiimppssss");
+
+    // Case 5: Single character
+    run_test(sort_fn, "Single Char", "z", "z");
+
+    // Case 6: Empty string
+    run_test(sort_fn, "Empty String", "", "");
+
+    // Case 7: Mixed Case (Assuming ASCII-based sort)
+    run_test(sort_fn, "Mixed Case", "Sorting", "Sginort");
+
+    // Case 8: Non-alphabetic (Spaces and Symbols)
+    run_test(sort_fn, "Symbols/Spaces", "b a c!", "  !abc");
+
+    printf("--- Test Suite Complete ---\n");
+}
+
+/* 
+   EXAMPLE USAGE:
+   void my_counting_sort(char* str) { ... your implementation ... }
+   
+   int main() {
+       test_counting_sort(my_counting_sort);
+       return 0;
+   }
+*/
+
+
 int main()
 {
 	//TEST(bubble_sort);
 	//TEST(quicksort);
 	TEST(mergesort);
+	
+	test_counting_sort(countsort);
+	test_counting_sort(countsort_ps);
 }
