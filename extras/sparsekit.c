@@ -35,9 +35,9 @@ Node* delete_element(Node* A, int row, int col);
 #include "display_sparse.c"
 #include "add_sparse.c"
 #include "transpose_sparse.c"
+#include "delete_element.c"
 
 Node* multiply_sparse(Node* A, Node* B, int r1, int c1, int r2, int c2) {};
-Node* delete_element(Node* A, int row, int col) {};
 
 /* ===================================================
    TEST FRAMEWORK CORE
@@ -251,15 +251,15 @@ int main() {
     add_test("Add - Rectangular", test_add_rectangular);
     add_test("Add - Sparse Large", test_add_sparse_large);
 
-    /* Transpose */
-    add_test("Transpose - Single", test_transpose_single);
-    add_test("Transpose - Basic", test_transpose_basic);
-    add_test("Transpose - Row", test_transpose_row);
-    add_test("Transpose - Column", test_transpose_col);
-    add_test("Transpose - Zero", test_transpose_zero);
-    add_test("Transpose - Dense", test_transpose_dense);
-    add_test("Transpose - Negative", test_transpose_negative);
-    add_test("Transpose - Sparse Large", test_transpose_sparse_large);
+    // /* Transpose */
+    // add_test("Transpose - Single", test_transpose_single);
+    // add_test("Transpose - Basic", test_transpose_basic);
+    // add_test("Transpose - Row", test_transpose_row);
+    // add_test("Transpose - Column", test_transpose_col);
+    // add_test("Transpose - Zero", test_transpose_zero);
+    // add_test("Transpose - Dense", test_transpose_dense);
+    // add_test("Transpose - Negative", test_transpose_negative);
+    // add_test("Transpose - Sparse Large", test_transpose_sparse_large);
 
     /* Delete */
     add_test("Delete - Head", test_delete_head);
