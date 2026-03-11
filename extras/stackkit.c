@@ -20,6 +20,7 @@
 #include "parenthesis.c"
 #include "eval_postfix.c"
 #include "dec_bin.c"
+#include "in2post.c"
 
 /* ================= TEST FRAMEWORK ================= */
 
@@ -66,7 +67,7 @@ void run_all_tests() {
     printf(YELLOW "=================================\n" RESET);
 }
 
-/* ================= TEST CASES ================= */
+/* ================= PARENTHESIS BALANCE ================= */
 
 /* --- Basic Balanced --- */
 int t1(){ return is_balanced("()"); }
@@ -118,7 +119,7 @@ int t24(){ return is_balanced("a"); }
 
 /* --- Complex mixed --- */
 int t25(){ return !is_balanced("if(a[0] == '{'){ return (b+c); }"); }
-/* ================= TEST CASES ================= */
+/* ================= EVALUATE POSTFIX ================= */
 
 /* Basic operations */
 int tp1(){ return evaluate_postfix("23+") == 5; }
@@ -216,6 +217,54 @@ int d2b27(){ return strcmp(dec_bin(50), "110010") == 0; }
 int d2b28(){ return strcmp(dec_bin(73), "1001001") == 0; }
 int d2b29(){ return strcmp(dec_bin(99), "1100011") == 0; }
 int d2b30(){ return strcmp(dec_bin(200), "11001000") == 0; }
+
+/* ================= CONVERTING INFIX TO POSTFIX ================= */
+
+/* Basic single operands */
+int ti1(){ return strcmp(infix_to_postfix("A"), "A") == 0; }
+int ti2(){ return strcmp(infix_to_postfix("5"), "5") == 0; }
+
+/* Basic operators */
+int ti3(){ return strcmp(infix_to_postfix("A+B"), "AB+") == 0; }
+int ti4(){ return strcmp(infix_to_postfix("A-B"), "AB-") == 0; }
+int ti5(){ return strcmp(infix_to_postfix("A*B"), "AB*") == 0; }
+int ti6(){ return strcmp(infix_to_postfix("A/B"), "AB/") == 0; }
+
+/* Operator precedence */
+int ti7(){ return strcmp(infix_to_postfix("A+B*C"), "ABC*+") == 0; }
+int ti8(){ return strcmp(infix_to_postfix("A*B+C"), "AB*C+") == 0; }
+int ti9(){ return strcmp(infix_to_postfix("A+B*C-D"), "ABC*+D-") == 0; }
+
+/* Parentheses */
+int ti10(){ return strcmp(infix_to_postfix("(A+B)"), "AB+") == 0; }
+int ti11(){ return strcmp(infix_to_postfix("(A+B)*C"), "AB+C*") == 0; }
+int ti12(){ return strcmp(infix_to_postfix("A*(B+C)"), "ABC+*") == 0; }
+int ti13(){ return strcmp(infix_to_postfix("(A+B)*(C+D)"), "AB+CD+*") == 0; }
+
+/* Nested parentheses */
+int ti14(){ return strcmp(infix_to_postfix("((A+B)*C)"), "AB+C*") == 0; }
+int ti15(){ return strcmp(infix_to_postfix("A+(B*(C+D))"), "ABCD+*+") == 0; }
+int ti16(){ return strcmp(infix_to_postfix("((A+B)*(C-D))/E"), "AB+CD-*E/") == 0; }
+
+/* Multiple operators */
+int ti17(){ return strcmp(infix_to_postfix("A+B+C"), "AB+C+") == 0; }
+int ti18(){ return strcmp(infix_to_postfix("A*B/C"), "AB*C/") == 0; }
+int ti19(){ return strcmp(infix_to_postfix("A+B*C+D"), "ABC*+D+") == 0; }
+
+/* Mixed digits and letters */
+int ti20(){ return strcmp(infix_to_postfix("3+4*5"), "345*+") == 0; }
+int ti21(){ return strcmp(infix_to_postfix("(1+2)*(3+4)"), "12+34+*") == 0; }
+
+/* Complex expressions */
+int ti22(){ return strcmp(infix_to_postfix("A+B*(C-D/E)"), "ABCDE/-*+") == 0; }
+int ti23(){ return strcmp(infix_to_postfix("(A+B*C)-(D/E+F)"), "ABC*+DE/F+-") == 0; }
+int ti24(){ return strcmp(infix_to_postfix("A*(B+C*D)-E"), "ABCD*+*E-") == 0; }
+
+/* Edge cases */
+int ti25(){ return strcmp(infix_to_postfix(""), "") == 0; }
+int ti26(){ return strcmp(infix_to_postfix("(A)"), "A") == 0; }
+int ti27(){ return strcmp(infix_to_postfix("((A))"), "A") == 0; }
+
 
 /* ================= MAIN ================= */
 
@@ -345,6 +394,47 @@ int main() {
     add_test("Seventy-Three", d2b28);
     add_test("Ninety-Nine", d2b29);
     add_test("Two Hundred", d2b30);
+
+
+
+    /* ================= INFIX TO POSTFIX TESTS ================= */
+    
+    add_test("Single Operand Letter", ti1);
+    add_test("Single Operand Digit", ti2);
+    
+    add_test("Basic Addition", ti3);
+    add_test("Basic Subtraction", ti4);
+    add_test("Basic Multiplication", ti5);
+    add_test("Basic Division", ti6);
+    
+    add_test("Precedence 1", ti7);
+    add_test("Precedence 2", ti8);
+    add_test("Precedence 3", ti9);
+    
+    add_test("Parentheses 1", ti10);
+    add_test("Parentheses 2", ti11);
+    add_test("Parentheses 3", ti12);
+    add_test("Parentheses 4", ti13);
+    
+    add_test("Nested 1", ti14);
+    add_test("Nested 2", ti15);
+    add_test("Nested 3", ti16);
+    
+    add_test("Multiple Operators 1", ti17);
+    add_test("Multiple Operators 2", ti18);
+    add_test("Multiple Operators 3", ti19);
+    
+    add_test("Digits Expression 1", ti20);
+    add_test("Digits Expression 2", ti21);
+    
+    add_test("Complex Expression 1", ti22);
+    add_test("Complex Expression 2", ti23);
+    add_test("Complex Expression 3", ti24);
+    
+    add_test("Edge Empty", ti25);
+    add_test("Edge Single Paren", ti26);
+    add_test("Edge Double Paren", ti27);
+    
 
     run_all_tests();
 }

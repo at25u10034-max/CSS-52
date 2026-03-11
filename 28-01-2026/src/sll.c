@@ -31,6 +31,7 @@ struct Node *create() {
 		
 	temp -> data = t;
 	temp -> next = NULL;
+	return temp;
 }
 
 

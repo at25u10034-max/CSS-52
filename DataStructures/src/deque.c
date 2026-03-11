@@ -35,7 +35,7 @@ void freedeque(Deque *q) {
 }
 
 void showdeque(Deque* q) {
-	printf("Deque {\n\tSize: %d\n\tREAR: %d\n\t", q->size, q->REAR);
+	printf("Deque {\n\tSize: %zu\n\tREAR: %zd\n\t", q->size, q->REAR);
 
 	if (isEmpty(q)) {
 		printf("CLEAR QUEUE.\n}\n");
@@ -154,6 +154,21 @@ int front(Deque* q) {
 
 	return q -> data[q->FRONT];
 }
+
+int at(Deque* q, int i) {
+	if (isEmpty(q)) {
+		fprintf(stderr, "%s\n", "Deque is Empty!");
+		return INT_MIN;
+	}
+
+	if (i >= q -> size) {
+		fprintf(stderr, "%s\n", "Index out of Range!");
+		return INT_MIN;
+	}
+
+	return q -> data[ (q -> FRONT + i) % q -> size];
+}
+
 
 
 int back(Deque* q) {
